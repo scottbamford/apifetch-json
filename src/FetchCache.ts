@@ -1,11 +1,11 @@
 ﻿import { FetchCacheOptions } from './FetchCacheOptions';
 
 /**
- *  Interface for a cache service that can be used by apiFetch() to read and store cachable results.
+ *  Interface for a cache service that can be used by ApiFetch() to read and store cachable results.
  *  
  *  MemoryFetchCache is the default FetchCache provided by and used by this library.
  *  
- *  You can also create your own provide your own or use one from an appropriate module for your stack, e.g. kirei-apifetch-cache-redux.
+ *  You can also create your own provide your own or use one from an appropriate module for your stack, e.g. kirei-ApiFetch-cache-redux.
  */
 export interface FetchCache {
     /**

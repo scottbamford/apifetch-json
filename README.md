@@ -1,4 +1,4 @@
-# ApiFetch
+# ApiFetch (apifetch-json)
 ApiFetch is a fetch() wrapper that provides an easy to read API for reading and writing JSON objects over HTTP(S) and REST apis.
 
 ApiFetch provides methods for the HTTP commands:
@@ -12,36 +12,38 @@ And a generic
 Each method can have its return type set (in Typescript) which will be deserialized from the 
 servers result:
 ```ts
-let myModel = apiFetch.get<MyModel>('https://.../');
+let myModel = ApiFetch.get<MyModel>('https://.../');
 ```
 
 You can pass an object in that will be seralized as the body of the request:
 ```ts
 let animal = { name: 'frog', color: 'blue' };
-let myModel = apiFetch.post<MyModel>('https://.../', animal);
+let myModel = ApiFetch.post<MyModel>('https://.../', animal);
 ```
 
 The API will be familiar for anyone who is has used fetch() before, but with a lot of the boiler plate removed.
 
 ## Installation
 
+ApiFetch is available as apifetch-json on npm.
+
 Install with npm:
 
 ```shell
-npm install guid-string
+npm install apifetch-json
 ```
 
 Or with yarn:
 
 ```shell
-yarn add guid-string
+yarn add apifetch-json
 ```
 
 ## Basic Usage
 
 ### Import
 ```ts
-import { ApiFetch } from 'apifetch';
+import { ApiFetch } from 'apifetch-json';
 ```
 
 ### Get
@@ -99,7 +101,7 @@ fetch() gives you full access to pass your own parameters to fetch including set
 and will return the deserilized json object from the result.
 ```ts
 let api = new ApiFetch();
-let myModel = apiFetch.fetch<MyModel>('https://.../', { method: 'POST', headers: {/*...*/}, body: '...'});
+let myModel = ApiFetch.fetch<MyModel>('https://.../', { method: 'POST', headers: {/*...*/}, body: '...'});
 ```
 
 ## Authorization and Other Defaults
@@ -203,7 +205,7 @@ Here are the basic usage examples in plain Javascript:
 
 ### Import
 ```ts
-import { ApiFetch } from 'apifetch';
+import { ApiFetch } from 'apifetch-json';
 ```
 
 
@@ -250,7 +252,7 @@ var myModel = api.delete('https://.../', animal);
 
 ```js
 var api = new ApiFetch();
-var myModel = apiFetch.fetch<MyModel>('https://.../', { method: 'POST', headers: {/*...*/}, body: '...'});
+var myModel = ApiFetch.fetch<MyModel>('https://.../', { method: 'POST', headers: {/*...*/}, body: '...'});
 ```
 
 ## Typescript

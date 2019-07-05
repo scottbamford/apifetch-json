@@ -6,7 +6,7 @@
  *  This implementation will only cache GET requests, and will raise expire events automatically whenever a POST, PUT, PATCH, or DELETE is made
  *  to clear all URLs that TODO
  *  
- *  For more complicated use cases you can use kirei-apifetch-reduxcache or your own cache solution.
+ *  For more complicated use cases you can use kirei-ApiFetch-reduxcache or your own cache solution.
  */
 export class MemoryFetchCache implements FetchCache {
     private items: Array<CacheItem>;
