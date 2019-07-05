@@ -39,7 +39,7 @@ yarn add guid-string
 
 ## Basic Usage
 
-## Import
+### Import
 ```ts
 import { ApiFetch } from 'apifetch';
 ```
@@ -201,7 +201,7 @@ remove the type information from the above examples.
 
 Here are the basic usage examples in plain Javascript:
 
-## Import
+### Import
 ```ts
 import { ApiFetch } from 'apifetch';
 ```
