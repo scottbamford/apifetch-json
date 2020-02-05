@@ -196,10 +196,12 @@ export class ApiFetch {
 
                 if (result.error) {
                     if (result.error.description) {
-                        throw result.error.description;
+                        throw new Error(result.error.description);
                     }
 
-                    throw result.error;
+                    throw new Error(result.error);
+                } else if (result.errorMessage) {
+                    throw new Error(result.errorMessage);
                 } else {
                     throw `Server indicated an error by returning a status of ${response.status}`;
                 }
