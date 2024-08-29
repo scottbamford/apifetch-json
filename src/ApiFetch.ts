@@ -188,20 +188,30 @@ export class ApiFetch {
             let response = await fetch(input, finalInit);
             if (!response.ok) {
                 let result: any;
-                try {
-                    result = await response.json();
-                } catch (anotherError) {
-                    throw `Server indicated an error by returning a status of ${response.status}`;
-                }
 
-                if (result.error) {
-                    if (result.error.description) {
-                        throw new Error(result.error.description);
+                // If we have content and a json body, try to decode it.
+                const contentType = response.headers.get('Content-Type');
+                if (response.headers.get('Content-Length') !== '0'
+                    && !!contentType
+                    && contentType.includes('application/json')
+                ) {
+                    try {
+                        result = await response.json();
+
+                        if (result.error) {
+                            if (result.error.description) {
+                                throw new Error(result.error.description);
+                            }
+
+                            throw new Error(result.error);
+                        } else if (result.errorMessage) {
+                            throw new Error(result.errorMessage);
+                        } else {
+                            throw `Server indicated an error by returning a status of ${response.status}`;
+                        }
+                    } catch (anotherError) {
+                        throw `Server indicated an error by returning a status of ${response.status}`;
                     }
-
-                    throw new Error(result.error);
-                } else if (result.errorMessage) {
-                    throw new Error(result.errorMessage);
                 } else {
                     throw `Server indicated an error by returning a status of ${response.status}`;
                 }
