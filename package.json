@@ -1,6 +1,6 @@
 {
   "name": "apifetch-json",
-  "version": "2.1.3",
+  "version": "2.2.1",
   "description": "ApiFetch is a fetch() wrapper that provides an easy to read API for reading and writing JSON objects over HTTP(S) and REST apis",
   "main": "dist/lib/commonjs/index.js",
   "module": "dist/lib/esm/index.js",

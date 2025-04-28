@@ -1,4 +1,6 @@
-﻿import { FetchCache } from "./FetchCache";
+﻿/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { FetchCache } from "./FetchCache";
 import { MemoryFetchCache } from './MemoryFetchCache';
 import { FetchCacheOptions } from './FetchCacheOptions';
 import { RequestInitFunction } from './RequestInitFunction';
@@ -44,7 +46,7 @@ export class ApiFetch {
     private combineRequestInit(...inits: Array<RequestInit | RequestInitFunction | undefined>): RequestInit {
         let ret: RequestInit = {};
 
-        for (let init of inits) {
+        for (const init of inits) {
             if (!init) {
                 continue;
             }
@@ -52,7 +54,7 @@ export class ApiFetch {
             if (typeof init === 'function') {
                 ret = init(ret);
             } else {
-                let { headers, ...rest } = init;
+                const { headers, ...rest } = init;
 
                 ret = {
                     ...ret,
@@ -96,7 +98,7 @@ export class ApiFetch {
             {
                 method: 'POST',
                 body: body ? JSON.stringify(body) : undefined,
-                ...(init? init: {})
+                ...(init ? init : {})
             },
             cacheOptions
         );
@@ -184,55 +186,47 @@ export class ApiFetch {
 
 
         // Make the fetch() request.
-        try {
-            let response = await fetch(input, finalInit);
-            if (!response.ok) {
-                let result: any;
+        const response = await fetch(input, finalInit);
+        if (!response.ok) {
+            let result: any;
 
-                // If we have content and a json body, try to decode it.
-                const contentType = response.headers.get('Content-Type');
-                if (response.headers.get('Content-Length') !== '0'
-                    && !!contentType
-                    && contentType.includes('application/json')
-                ) {
-                    try {
-                        result = await response.json();
+            // If we have content and a json body, try to decode it.
+            // NOTE ASP.NET Core now doesn't set Content-Length when returning 400 errors, so we've had to go to reading
+            // the body content without checking the content length moving forward.
+            try {
+                result = await response.json();
+            } catch (error) {
+                // If we can't decode the body, just throw the error.
+                throw `Server indicated an error by returning a status of ${response.status}`;
+            }
 
-                        if (result.error) {
-                            if (result.error.description) {
-                                throw new Error(result.error.description);
-                            }
-
-                            throw new Error(result.error);
-                        } else if (result.errorMessage) {
-                            throw new Error(result.errorMessage);
-                        } else {
-                            throw `Server indicated an error by returning a status of ${response.status}`;
-                        }
-                    } catch (anotherError) {
-                        throw `Server indicated an error by returning a status of ${response.status}`;
-                    }
-                } else {
-                    throw `Server indicated an error by returning a status of ${response.status}`;
+            // If we have an error message, throw that.
+            if (result.error) {
+                if (result.error.description) {
+                    throw new Error(result.error.description);
                 }
+
+                throw new Error(result.error);
+            } else if (result.errorMessage) {
+                throw new Error(result.errorMessage);
+            } else {
+                throw `Server indicated an error by returning a status of ${response.status}`;
             }
-
-            // Special case for those parts of rest apis that return no body content (.e.g. saving successfully with a POST).
-            if (response.headers.get('Content-Length') === '0') {
-                return null as any;
-            }
-
-            let result = await response.json();
-
-            // Store the result in the cache if we can.
-            if (cacheOptions && this.cache) {
-                this.cache.storeInCache(input, finalInit, result, cacheOptions);
-            }
-
-            return result;
-        } catch (error) {
-            throw error;
         }
+
+        // Special case for those parts of rest apis that return no body content (.e.g. saving successfully with a POST).
+        if (response.headers.get('Content-Length') === '0') {
+            return null as any;
+        }
+
+        const result = await response.json();
+
+        // Store the result in the cache if we can.
+        if (cacheOptions && this.cache) {
+            this.cache.storeInCache(input, finalInit, result, cacheOptions);
+        }
+
+        return result;
     }
 
     /**
